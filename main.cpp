@@ -210,6 +210,14 @@ auto	detect( const std::string & file, const std::string & saveTo, double k ) {
 	return 0;
 }
 
+bool	is_url( const std::string & path ) {
+	auto found = path.find( "://" );
+	if ( found == std::string::npos ) {
+		return false;
+	}
+	return true;
+}
+
 static void help() {
 	std::cout << std::endl <<
 			"This program detect all moves in video\n"
@@ -222,6 +230,7 @@ int	main( int argc, char** argv ) {
 		help();
 		return 0;
 	}
+
 	auto k = 0.1;
 	auto outDir = std::string( "" );
 	for ( auto i = 0; i < argc; ++i ) {
@@ -237,22 +246,31 @@ int	main( int argc, char** argv ) {
 			++i;
 		}
 	}
-	auto currentDir = getFileDir( argv[ 0 ] );
-	auto filePath = argv[ argc - 1 ];
-	auto file = fs::path{ filePath };
+
+	auto file = fs::path{ argv[ argc - 1 ] };
 	auto isDir = fs::is_directory( file );
 	auto isExists = fs::exists( file );
-	if ( !isExists ) {
+	auto isUrl = is_url( file.string() );
+	if ( !isExists && !isUrl ) {
 		std::cout << "File or directory " << file << " not is exists" << std::endl;
 		return -1;
 	}
-	std::cout << "Is directory: " << isDir << std::endl;
-	auto fileName = getFileNameWithoutExtension( filePath );
-	auto fileDir = getFileDir( filePath );
-	auto saveTo = outDir == "" ? createDir( fileDir == "" ? currentDir : fileDir, fileName ) : createDir( outDir );
-	std::cout << "Begin. k = " << k << ". Files save to \"" << saveTo << "\"" << std::endl;
+	auto fileName = file.stem().string();//getFileNameWithoutExtension( filePath );
+	auto fileDir = file.parent_path().string();//getFileDir( filePath );
+	auto saveTo = outDir == "" ? createDir( fileDir == "" ? "./" : fileDir, fileName ) : createDir( outDir );
+	std::cout << "Begin. k = " << k << "." << std::endl;
+	std::cout << "Input " << ( isUrl ? "url" : ( isDir ? "directory" : "file" ) ) <<" is " << file << std::endl;
+	std::cout << "Files save to \"" << saveTo << "\"" << std::endl;
 	try {	
-		return detect( filePath, saveTo, k );
+		if ( !isDir ) {
+			return detect( file.string(), saveTo, k );
+		}	
+		for ( fs::directory_iterator it( file ), end; it != end; ++it) {
+			if ( it->path().extension() != ".ts" ) {
+				continue;
+			}
+			std::cout << it->path() << std::endl;
+		}
 	} 
 	catch ( ... ) { //const std::exception & exception
 		//std::cerr << exception.what();
