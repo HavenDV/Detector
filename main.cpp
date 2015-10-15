@@ -96,54 +96,10 @@ auto time2HMSString( double time ) {
 	return int2Time( h ) + "-" + int2Time( m ) + "-" + int2Time( s );
 }
 
-auto	createDir( const std::string & dir, const std::string & name = "" ) {
-	auto path = dir + "/" + name;
-	//std::system( ( "mkdir -p \"" + path + "\"" ).c_str() );
-	fs::create_directory( path );
-	return path;
-}
-
 auto	saveFrame( const cv::Mat & mat, const std::string & dir, const std::string & name, const std::string & extension ) {
 	auto path = dir + "/" + name + "." + extension;
 	cv::imwrite( path, mat );
 	return path;
-}
-
-auto	getFileName( const std::string & path )
--> std::string {
-	auto found = path.find_last_of( "/\\" );
-	return path.substr( found + 1 );
-}
-
-auto	getFileNameWithoutExtension( const std::string & path )
--> std::string {
-	auto name = getFileName( path );
-	auto found = name.find_last_of( '.' );
-	if ( found == std::string::npos ) {
-		return path;
-	}
-
-	return name.substr( 0, found );
-}
-
-auto	getFileExtension( const std::string & path )
--> std::string {
-	auto found = path.find_last_of( '.' );
-	if ( found == std::string::npos ) {
-		return "";
-	}
-
-	return path.substr( found + 1 );
-}
-
-auto	getFileDir( const std::string & path )
--> std::string {
-	auto found = path.find_last_of( "/\\" );
-	if ( found == std::string::npos ) {
-		return "";
-	}
-
-	return path.substr( 0, found );
 }
 
 auto	detect( const std::string & file, const std::string & saveTo, double k ) {
@@ -153,14 +109,10 @@ auto	detect( const std::string & file, const std::string & saveTo, double k ) {
 
 	cv::BackgroundSubtractorMOG2 subtractor;
 
-	//createWindow( "out", { 0, 0 }, { 800, 600 }, cv::WINDOW_NORMAL );
-
 	auto i = 0;
 	auto isDetected = false;
-	//auto lastDir = std::string( "" );
 	while ( true ) {
 		++i;
-		//capture.set( cv::CAP_PROP_POS_FRAMES, i );
 		cv::Mat frame;
 		capture >> frame;
 		if ( i % 30 != 0 ) {
@@ -184,7 +136,6 @@ auto	detect( const std::string & file, const std::string & saveTo, double k ) {
 		cv::putText( out, isDetected ? "Detected" : "", { 50, 50 }, cv::FONT_HERSHEY_COMPLEX, 1.0, { 0, 0, 255 } );
 		//out += asColor( mask, Colors::Red );
 		//cv::imshow( "out", out );
-		//writer << out;
 
 		if ( isDetected ) {
 			auto time = capture.get( CV_CAP_PROP_POS_MSEC );
@@ -197,14 +148,9 @@ auto	detect( const std::string & file, const std::string & saveTo, double k ) {
 
 		if ( i % 1000 == 0 ) {
 			auto percent = 100.0 * i / frameCount;
-			if ( percent > 30.0 ) {
-				return 0;
-			}
 			std::cout << "Progress: " << asString( percent ) << "%" << std::endl;
 		}
 		cv::waitKey( 1 );
-		
-		//i += 30;
 	}
 
 	return 0;
@@ -215,6 +161,7 @@ bool	is_url( const std::string & path ) {
 	if ( found == std::string::npos ) {
 		return false;
 	}
+
 	return true;
 }
 
@@ -222,7 +169,7 @@ static void help() {
 	std::cout << std::endl <<
 			"This program detect all moves in video\n"
 			"Call\n"
-			"detect [ -k value -- default is 0.1 ] [-o path -- out dir. default is fileDir or currentDir ] file_name.ts\n\n";
+			"detect [ -k value -- default is 0.1 ] [-o path -- out dir. default is fileDir or currentDir ] paths_to_file_dir_or_url \n\n";
 }
 
 int	main( int argc, char** argv ) {
@@ -231,39 +178,46 @@ int	main( int argc, char** argv ) {
 		return 0;
 	}
 
-	auto k = 0.1;
-	auto outDir = std::string( "" );
-	for ( auto i = 0; i < argc; ++i ) {
-		if ( std::string( argv[ i ] ) == "-k" && i + 1 < argc ) {
-			k = std::atof( argv[ i + 1 ] );
-			++i;
-		}
-		else if ( std::string( argv[ i ] ) == "-o" && i + 1 < argc ) {
-			outDir = argv[ i + 1 ];
-			if ( outDir[ outDir.size() - 1 ] == '/' ) {
-				outDir = getFileDir( outDir );
+	try {
+		auto k = 0.1;
+		fs::path outDir;
+		std::vector< fs::path > input;
+		for ( auto i = 0; i < argc; ++i ) {
+			if ( std::string( argv[ i ] ) == "-k" && i + 1 < argc ) {
+				k = std::atof( argv[ i + 1 ] );
+				++i;
 			}
-			++i;
+			else if ( std::string( argv[ i ] ) == "-o" && i + 1 < argc ) {
+				outDir = { argv[ i + 1 ] };
+				++i;
+			}
+			else {
+				input.emplace_back( argv[ i ] );
+			}
 		}
-	}
 
-	auto file = fs::path{ argv[ argc - 1 ] };
-	auto isDir = fs::is_directory( file );
-	auto isExists = fs::exists( file );
-	auto isUrl = is_url( file.string() );
-	if ( !isExists && !isUrl ) {
-		std::cout << "File or directory " << file << " not is exists" << std::endl;
-		return -1;
-	}
-	auto fileName = file.stem().string();//getFileNameWithoutExtension( filePath );
-	auto fileDir = file.parent_path().string();//getFileDir( filePath );
-	auto saveTo = outDir == "" ? createDir( fileDir == "" ? "./" : fileDir, fileName ) : createDir( outDir );
-	std::cout << "Begin. k = " << k << "." << std::endl;
-	std::cout << "Input " << ( isUrl ? "url" : ( isDir ? "directory" : "file" ) ) <<" is " << file << std::endl;
-	std::cout << "Files save to \"" << saveTo << "\"" << std::endl;
-	try {	
+		auto file = fs::path{ argv[ argc - 1 ] };
+		auto isExists = fs::exists( file );
+		auto isUrl = is_url( file.string() );
+		if ( !isExists && !isUrl ) {
+			std::cout << "File or directory " << file << " not is exists" << std::endl;
+			return -1;
+		}
+
+		auto isDir = fs::is_directory( file );
+		outDir = outDir.empty() ? ( file.has_parent_path() ? "./" : file.parent_path() ) : outDir;
+		outDir /= file.stem();
+		if ( !fs::exists( outDir ) && !fs::create_directory( outDir ) ) {
+			std::cout << "Unable to create directory " << outDir << std::endl;
+			return -1;
+		}
+
+		std::cout << "Begin. k = " << k << "." << std::endl;
+		std::cout << "Input " << ( isUrl ? "url" : ( isDir ? "directory" : "file" ) ) <<" is " << file << std::endl;
+		std::cout << "Files save to " << outDir << std::endl;
+		
 		if ( !isDir ) {
-			return detect( file.string(), saveTo, k );
+			return detect( file.string(), outDir.string(), k );
 		}	
 		for ( fs::directory_iterator it( file ), end; it != end; ++it) {
 			if ( it->path().extension() != ".ts" ) {
@@ -272,9 +226,9 @@ int	main( int argc, char** argv ) {
 			std::cout << it->path() << std::endl;
 		}
 	} 
-	catch ( ... ) { //const std::exception & exception
-		//std::cerr << exception.what();
-		std::cin.ignore();
+	catch ( const std::exception & exception ) {
+		std::cerr << "Error: "<< exception.what() << std::endl;
 		return -1;
 	}
+	return 0;
 }
