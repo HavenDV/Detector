@@ -156,14 +156,50 @@ auto	detect( const std::string & file, const std::string & saveTo, double k ) {
 	return 0;
 }
 
-bool	is_url( const std::string & path ) {
-	auto found = path.find( "://" );
+bool	is_url( const fs::path & path ) {
+	auto string = path.string();
+	auto found = string.find( "://" );
 	if ( found == std::string::npos ) {
 		return false;
 	}
 
 	return true;
 }
+
+auto	detect_file_or_url( const fs::path & file, const fs::path & saveTo, double k ) {
+	auto isExists = fs::exists( file );
+	auto isUrl = is_url( file );
+	if ( !isExists && !isUrl ) {
+		std::cout << "File or directory " << file << " not is exists" << std::endl;
+		return -1;
+	}
+
+	auto outDir = saveTo.empty() ? ( file.has_parent_path() ? "./" : file.parent_path() ) : saveTo;
+	outDir /= file.stem();
+	if ( !fs::exists( outDir ) && !fs::create_directories( outDir ) ) {
+		std::cout << "Unable to create directory " << outDir << std::endl;
+		return -1;
+	}
+
+	std::cout << "Begin. k = " << k << "." << std::endl;
+	std::cout << "Input " << ( isUrl ? "url" : "file" ) <<" is " << file << std::endl;
+	std::cout << "Files save to " << outDir << std::endl;
+	
+	return detect( file.string(), outDir.string(), k );
+}
+
+auto	detect_directory( const fs::path & file, const fs::path & outDir, double k ) {
+	std::cout << "Start work in directory " << file << std::endl;
+	for ( fs::directory_iterator it( file ), end; it != end; ++it) {
+		if ( it->path().extension() != ".ts" ) {
+			continue;
+		}
+
+		detect_file_or_url( it->path(), outDir, k );
+	}
+
+	return 0;
+} 
 
 static void help() {
 	std::cout << std::endl <<
@@ -182,13 +218,13 @@ int	main( int argc, char** argv ) {
 		auto k = 0.1;
 		fs::path outDir;
 		std::vector< fs::path > input;
-		for ( auto i = 0; i < argc; ++i ) {
+		for ( auto i = 1; i < argc; ++i ) {
 			if ( std::string( argv[ i ] ) == "-k" && i + 1 < argc ) {
 				k = std::atof( argv[ i + 1 ] );
 				++i;
 			}
 			else if ( std::string( argv[ i ] ) == "-o" && i + 1 < argc ) {
-				outDir = { argv[ i + 1 ] };
+				outDir = argv[ i + 1 ];
 				++i;
 			}
 			else {
@@ -196,39 +232,19 @@ int	main( int argc, char** argv ) {
 			}
 		}
 
-		auto file = fs::path{ argv[ argc - 1 ] };
-		auto isExists = fs::exists( file );
-		auto isUrl = is_url( file.string() );
-		if ( !isExists && !isUrl ) {
-			std::cout << "File or directory " << file << " not is exists" << std::endl;
-			return -1;
-		}
-
-		auto isDir = fs::is_directory( file );
-		outDir = outDir.empty() ? ( file.has_parent_path() ? "./" : file.parent_path() ) : outDir;
-		outDir /= file.stem();
-		if ( !fs::exists( outDir ) && !fs::create_directory( outDir ) ) {
-			std::cout << "Unable to create directory " << outDir << std::endl;
-			return -1;
-		}
-
-		std::cout << "Begin. k = " << k << "." << std::endl;
-		std::cout << "Input " << ( isUrl ? "url" : ( isDir ? "directory" : "file" ) ) <<" is " << file << std::endl;
-		std::cout << "Files save to " << outDir << std::endl;
-		
-		if ( !isDir ) {
-			return detect( file.string(), outDir.string(), k );
-		}	
-		for ( fs::directory_iterator it( file ), end; it != end; ++it) {
-			if ( it->path().extension() != ".ts" ) {
-				continue;
+		for ( auto && file : input ) {
+			if ( !fs::is_directory( file ) ) {
+				detect_file_or_url( file, outDir, k );
+			}	
+			else {
+				detect_directory( file, outDir, k );
 			}
-			std::cout << it->path() << std::endl;
 		}
 	} 
 	catch ( const std::exception & exception ) {
 		std::cerr << "Error: "<< exception.what() << std::endl;
 		return -1;
 	}
+
 	return 0;
 }
