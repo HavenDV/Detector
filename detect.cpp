@@ -1,5 +1,7 @@
 #include <iostream>
-#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/video.hpp>
+#include <opencv2/highgui.hpp>
 
 namespace Colors {
 	constexpr auto None = 0x00;
@@ -9,8 +11,8 @@ namespace Colors {
 	constexpr auto All = 0x07;
 }
 
-auto	channel( const cv::Mat & mat, int index ) -> cv::Mat {
-	if ( mat.empty() || index > mat.channels() - 1 ) {
+auto	channel( const cv::Mat & mat, unsigned int index ) -> cv::Mat {
+	if ( mat.empty() || index > static_cast<unsigned int>(mat.channels() - 1) ) {
 		return cv::Mat::zeros( mat.size(), mat.type() & cv::NORM_TYPE_MASK );
 	}
 
