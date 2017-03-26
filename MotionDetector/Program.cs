@@ -10,12 +10,12 @@
 
         static void DetectFileOrUrl(string name, string to, double k)
         {
-            if (!File.Exists(name))
+            var isUrl = name.IsUrl();
+            if (!isUrl && !File.Exists(name))
             {
-                throw new FileNotFoundException(nameof(name));
+                throw new FileNotFoundException("File not found", name);
             }
 
-            var isUrl = name.IsUrl();
             if (string.IsNullOrWhiteSpace(to))
             {
                 to = isUrl ? Environment.CurrentDirectory : Path.GetFullPath(name);
