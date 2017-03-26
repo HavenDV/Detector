@@ -68,8 +68,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\Libraries\opencv\2.4.13\opencv\build\include;D:\Libraries\boost_1_63_0;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Libraries\opencv\2.4.13\opencv\build\x86\vc12\lib;D:\Libraries\boost_1_63_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Libraries\opencv\2.4.13\install\include;D:\Libraries\boost_1_63_0;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Libraries\opencv\2.4.13\install\x86\vc14\lib;D:\Libraries\boost_1_63_0\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,7 +101,7 @@
       <AdditionalDependencies>opencv_core2413.lib;opencv_video2413.lib;opencv_highgui2413.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "D:\Libraries\opencv\2.4.13\opencv\build\x86\vc12\bin\*.dll" "..\Detector\Release\"</Command>
+      <Command>copy /Y "D:\Libraries\opencv\2.4.13\install\x86\vc14\bin\*.dll" "..\Detector\Release\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

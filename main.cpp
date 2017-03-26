@@ -16,12 +16,12 @@ bool	is_url( const fs::path & path ) {
 	return true;
 }
 
-auto	detect_file_or_url( const fs::path & file, const fs::path & saveTo, double k ) {
+void	detect_file_or_url( const fs::path & file, const fs::path & saveTo, double k ) {
 	auto isExists = fs::exists( file );
 	auto isUrl = is_url( file );
-	if ( !isExists && !isUrl ) {
-		std::cout << "File or directory " << file << " not is exists" << std::endl;
-		return -1;
+	if ( !isExists && !isUrl )
+	{
+		throw std::exception(("File or directory " + file.string() + " not is exists").c_str());
 	}
 
 	auto outDir = saveTo.empty() ? ( file.has_parent_path() ? file.parent_path() : "./" ) : saveTo;
@@ -29,19 +29,19 @@ auto	detect_file_or_url( const fs::path & file, const fs::path & saveTo, double 
 		outDir /= file.stem();
 	}
 
-	if ( !fs::exists( outDir ) && !fs::create_directories( outDir ) ) {
-		std::cout << "Unable to create directory " << outDir << std::endl;
-		return -1;
+	if ( !fs::exists( outDir ) && !fs::create_directories( outDir ) )
+	{
+		throw std::exception(("Unable to create directory " + outDir.string()).c_str());
 	}
 
 	std::cout << "Begin. k = " << k << "." << std::endl;
 	std::cout << "Input " << ( isUrl ? "url" : "file" ) << " is " << file << std::endl;
 	std::cout << "Files save to " << outDir << std::endl;
 	
-	return detect( file.string(), outDir.string(), k );
+	detect( file.string(), outDir.string(), k );
 }
 
-auto	detect_directory( const fs::path & file, const fs::path & outDir, double k ) {
+void	detect_directory( const fs::path & file, const fs::path & outDir, double k ) {
 	std::cout << "Start work in directory " << file << std::endl;
 	for ( fs::directory_iterator it( file ), end; it != end; ++it) {
 		if ( it->path().extension() != ".ts" ) {
@@ -50,8 +50,6 @@ auto	detect_directory( const fs::path & file, const fs::path & outDir, double k 
 
 		detect_file_or_url( it->path(), outDir, k );
 	}
-
-	return 0;
 } 
 
 int	main( int argc, char** argv ) {
@@ -73,19 +71,23 @@ int	main( int argc, char** argv ) {
 	po::store( po::command_line_parser( argc, argv ).options( desc ).positional( p ).run(), vm );
 	po::notify( vm );
 
-	if ( vm.count( "help" ) || argc < 2 ) {
+	if ( vm.count( "help" ) || argc < 2 )
+	{
 		std::cout << "This program detect all moves in video" << std::endl;
-    		std::cout << desc << "\n";
-    		return 1;
+		std::cout << desc << "\n";
+		return 0;
 	}
 
 	try {
-		for ( auto && file : input ) {
-			if ( !fs::is_directory( file ) ) {
-				detect_file_or_url( file, outDir, k );
+		for ( auto && file : input )
+		{
+			if ( fs::is_directory( file ) )
+			{
+				detect_directory(file, outDir, k);
 			}	
-			else {
-				detect_directory( file, outDir, k );
+			else
+			{
+				detect_file_or_url(file, outDir, k);
 			}
 		}
 	} 
