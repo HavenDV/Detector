@@ -216,7 +216,6 @@ pip-log.txt
 .mr.developer.cfg
 
 #Other
-detect
 *.VC.db
 *.VC.opendb
 /packages/**
