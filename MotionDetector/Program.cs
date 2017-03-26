@@ -7,7 +7,6 @@
 
     class Program
     {
-
         static void DetectFileOrUrl(string name, string to, double k)
         {
             var isUrl = name.IsUrl();
@@ -83,7 +82,7 @@ Arguments:");
             }
             catch (Exception e)
             {
-                Console.WriteLine($@"Exception: {e.Message}
+                Console.WriteLine($@"Exception: {e.Message}{e.StackTrace}
 Try `detector --help' for more information.");
             }
         }

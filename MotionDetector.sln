@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionDetector", "MotionDet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionDetectorLibrary", "MotionDetectorLibrary\MotionDetectorLibrary.csproj", "{449B6D81-3FC3-4232-A7FE-175D737C4E6C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionDetector.Tests", "MotionDetector.Tests\MotionDetector.Tests.csproj", "{45044660-1015-4321-92F6-CD2129AA4BD6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,18 @@ Global
 		{449B6D81-3FC3-4232-A7FE-175D737C4E6C}.Release|x64.Build.0 = Release|Any CPU
 		{449B6D81-3FC3-4232-A7FE-175D737C4E6C}.Release|x86.ActiveCfg = Release|Any CPU
 		{449B6D81-3FC3-4232-A7FE-175D737C4E6C}.Release|x86.Build.0 = Release|Any CPU
+		{45044660-1015-4321-92F6-CD2129AA4BD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45044660-1015-4321-92F6-CD2129AA4BD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45044660-1015-4321-92F6-CD2129AA4BD6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{45044660-1015-4321-92F6-CD2129AA4BD6}.Debug|x64.Build.0 = Debug|Any CPU
+		{45044660-1015-4321-92F6-CD2129AA4BD6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{45044660-1015-4321-92F6-CD2129AA4BD6}.Debug|x86.Build.0 = Debug|Any CPU
+		{45044660-1015-4321-92F6-CD2129AA4BD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45044660-1015-4321-92F6-CD2129AA4BD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45044660-1015-4321-92F6-CD2129AA4BD6}.Release|x64.ActiveCfg = Release|Any CPU
+		{45044660-1015-4321-92F6-CD2129AA4BD6}.Release|x64.Build.0 = Release|Any CPU
+		{45044660-1015-4321-92F6-CD2129AA4BD6}.Release|x86.ActiveCfg = Release|Any CPU
+		{45044660-1015-4321-92F6-CD2129AA4BD6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
