@@ -1,5 +1,5 @@
 # MotionDetector [![Language](https://img.shields.io/badge/language-C%23-blue.svg?style=flat-square)](https://github.com/HavenDV/MotionDetector/search?l=C%23)
-
+ 
 Branches
 ========
 
