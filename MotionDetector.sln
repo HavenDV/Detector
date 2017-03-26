@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionDetectorLibrary", "Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionDetector.Tests", "MotionDetector.Tests\MotionDetector.Tests.csproj", "{45044660-1015-4321-92F6-CD2129AA4BD6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionDetectorLibrary.Tests", "MotionDetectorLibrary.Tests\MotionDetectorLibrary.Tests.csproj", "{5CF2ADB2-AA93-43DC-B5A5-BE9E2FD04B8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,18 @@ Global
 		{45044660-1015-4321-92F6-CD2129AA4BD6}.Release|x64.Build.0 = Release|Any CPU
 		{45044660-1015-4321-92F6-CD2129AA4BD6}.Release|x86.ActiveCfg = Release|Any CPU
 		{45044660-1015-4321-92F6-CD2129AA4BD6}.Release|x86.Build.0 = Release|Any CPU
+		{5CF2ADB2-AA93-43DC-B5A5-BE9E2FD04B8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CF2ADB2-AA93-43DC-B5A5-BE9E2FD04B8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CF2ADB2-AA93-43DC-B5A5-BE9E2FD04B8C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5CF2ADB2-AA93-43DC-B5A5-BE9E2FD04B8C}.Debug|x64.Build.0 = Debug|Any CPU
+		{5CF2ADB2-AA93-43DC-B5A5-BE9E2FD04B8C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5CF2ADB2-AA93-43DC-B5A5-BE9E2FD04B8C}.Debug|x86.Build.0 = Debug|Any CPU
+		{5CF2ADB2-AA93-43DC-B5A5-BE9E2FD04B8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CF2ADB2-AA93-43DC-B5A5-BE9E2FD04B8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CF2ADB2-AA93-43DC-B5A5-BE9E2FD04B8C}.Release|x64.ActiveCfg = Release|Any CPU
+		{5CF2ADB2-AA93-43DC-B5A5-BE9E2FD04B8C}.Release|x64.Build.0 = Release|Any CPU
+		{5CF2ADB2-AA93-43DC-B5A5-BE9E2FD04B8C}.Release|x86.ActiveCfg = Release|Any CPU
+		{5CF2ADB2-AA93-43DC-B5A5-BE9E2FD04B8C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
