@@ -52,7 +52,8 @@ Files save to: {to}");
             var set = new OptionSet() {
 { "k|koef=", "Detection relative area. Default is 0.1", (double v) => k = v },
 { "o|out=", @"Out path. Default is fileDir or currentDir", v => to = v },
-{ "h|help",  "show this message and exit", v => showHelp = v != null },
+{ "h|help",  "Show this message and exit", v => showHelp = v != null },
+{ "e|emgu",  "Path to EmguCV dlls", v => Directory.SetCurrentDirectory(v) },
             };
             
             try
