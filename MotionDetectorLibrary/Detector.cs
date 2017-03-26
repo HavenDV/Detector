@@ -19,7 +19,7 @@
             return $"{h}-{m}-{s}";
         }
 
-        public static void Detect(string file, string to, double k)
+        public static void Detect(string file, string to, double k, bool exitIfDetected = false)
         {
             var capture = new Capture(file);
             var frameCount = capture.GetCaptureProperty(CapProp.FrameCount);
@@ -50,6 +50,10 @@
 
                 if (isDetected)
                 {
+                    if (exitIfDetected)
+                    {
+                        return;
+                    }
                     CvInvoke.PutText(outMat, "Detected", new Point(50, 50), FontFace.HersheyComplex, 1.0, new MCvScalar(0,0, 255));
                     var time = capture.GetCaptureProperty(CapProp.PosMsec);
                     var outPath = Path.Combine(to, MsToTimeString(time)) + ".jpg";
