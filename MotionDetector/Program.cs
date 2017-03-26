@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using Mono.Options;
+    using MotionDetectorLibrary;
 
     class Program
     {
@@ -27,7 +28,8 @@
             Console.WriteLine($@"Start work for {(isUrl ? "url" : "file")}: {name}
 k = {k}
 Files save to: {to}");
-            //Detect
+
+            Detector.Detect(name, to, k);
         }
 
         static void DetectDirectory(string name, string to, double k)

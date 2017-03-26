@@ -54,6 +54,12 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MotionDetectorLibrary\MotionDetectorLibrary.csproj">
+      <Project>{449b6d81-3fc3-4232-a7fe-175d737c4e6c}</Project>
+      <Name>MotionDetectorLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
