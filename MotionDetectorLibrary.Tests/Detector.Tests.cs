@@ -20,7 +20,7 @@
             return Path.Combine(
                 Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(
                         Assembly.GetExecutingAssembly().Location))
-                )), "packages", "EmguCV.3.1.0.1", "build", "native", "x86");
+                )), "packages", "EmguCV.3.1.0", "build", "native", "x86");
         }
 
         [Test]
@@ -37,7 +37,8 @@
         {
             Directory.SetCurrentDirectory(GetEmguCVDllDir());
             Assert.DoesNotThrow(
-                () => Detector.Detect(GetFullPath("test.mp4"), Environment.CurrentDirectory, 0.1, true)
+                () => 
+                Detector.Detect(GetFullPath("test.mp4"), Environment.CurrentDirectory, 0.1, true)
                 );
         }
     }
